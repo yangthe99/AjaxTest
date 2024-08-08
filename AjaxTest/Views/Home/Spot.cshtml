@@ -3,50 +3,65 @@
 }
 
 @section Styles {
-}
+    <link href="~/css/spotstylesheet.min.css" rel="stylesheet" />
+}   
+
 
 <h1>JSON 作業-Spot</h1>
 <ul id="ul1">
 </ul>
 
-<div class="card" style="width: 18rem;">
+@* <div class="card" style="width: 18rem;">
     <img src="~/img/chiikawa.png" class="card-img-top" alt="spotName">
     <div class="card-body">
         <h5 class="card-title">Spottitle</h5>
         <p class="card-text">範例(TextBody)</p>
         <footer class="card-text">Address</footer>
     </div>
-</div>
+</div> *@
 
-<div class="card" style="width: 18rem;">
-    <img src="~/img/chiikawa.png" class="card-img-top" alt="spotName">
-    <div id="card" class="card-body">
-        <h5 class="card-title">Spottitle</h5>
-        <p class="card-text">範例(TextBody)</p>
-        <footer class="card-text">Address</footer>
+<div class="container mt-4">
+    <div id="spot" class="row">
+        <!-- Card -->
     </div>
 </div>
+
 
 @section Scripts {
 
     <script id="spotlist" src="~/js/travel.js"></script>
     <script>
         console.log(spots);
-        const spots = document.querySelector("#spotlist");
-        const spotCard = document.querySelector('#card')
+        const spotContainer = document.querySelector('#spot');
 
 
-        // const eleSpots = spots.CommonFormat.Section.map(spot => {
-        //     const { stitle, xbody, address } = spot
-        //     return (
-        //         `
-        //                         <div>
-        //                            <h5 class="card-title">${stitle}</h5>
-        //                             <p class="card-text">${xbody}</p>
-        //                            <footer class="card-text">${address}</footer>
-        //                         </div>
-        //                         `
-        //     )
-        // });
+        const eleSpots = spots.CommonFormat.Section.map(spot => {
+            const { stitle, xbody, address,file } = spot;
+
+            const imgKeys = Object.keys(file.img || {});
+            const firstImg = imgKeys.length > 0 ? file.img[imgKeys[0]] : {};
+            const { description = 'No Image', text = 'default.jpg' } = firstImg;
+            return (
+                `
+                <div class="col-md-4 mb-4">
+                <div id="card" class="card btn" style="width: 18rem;">
+                <img src="${text}" class="card-img-top" alt="${description}">
+                <div class="card-body">
+                <h5 class="card-title">${stitle}</h5>
+                <p class="card-text">${xbody.substring(0, 51)}...</p>
+                <p class="card-footer">${address}</p>
+                </div>
+                </div>
+                </div>
+                `
+            );
+        });
+        spotContainer.innerHTML = eleSpots.join("");
+
+
+        spotContainer.addEventListener('click', function (event) {
+        });
+
+
     </script>
 }

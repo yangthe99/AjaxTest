@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "wwwroot/css/SpotStyleSheet.min.css",
+    "inputFiles": [
+      "wwwroot/css/SpotStyleSheet.css"
+    ]
+  }
+]

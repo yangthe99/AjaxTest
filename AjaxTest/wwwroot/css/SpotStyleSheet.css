@@ -1,0 +1,13 @@
+﻿.card-title {
+    font-weight: bold;
+}
+
+.card-text {
+    text-align: justify;
+    color: gray;
+}
+
+.card-footer {
+    font-size: 12px;
+    background-color: white;
+}
