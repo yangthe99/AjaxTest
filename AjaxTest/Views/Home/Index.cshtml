@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@section Styles {
+
+}
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@model IEnumerable<AjaxTest.Models.Address>
+<ul>
+    @foreach (var add in Model)
+    {
+        <li>@add.Id</li>
+    }
+</ul>
+
+@section Scripts {
+    <script>
+        // //宣告定義promise
+        // var promise = new Promise(function (resolve, reject) {
+        //     //跑一堆程式碼
+        //     if (false) { resolve("OK!") }
+        //     else { reject("NO!!!!!!!") }
+        // });
+
+        // //使用promise
+        // promise
+        //     .then(result => console.log(result))
+        //     .catch(error => console.log(error))
+        //     .finally(() => console.log("END."))
+
+        function printSomething(data) {
+            const promise = new Promise(function (resolve, reject) { 
+                setTimeout(function () { resolve(data) }, 1000);
+            })
+            return promise;
+        }
+
+        // printSomething('A').then(data => { console.log(data)
+        //     return printSomething('B').then(data => { console.log(data) })
+        // })
+
+        async function Show() {
+            let data = await printSomething('A'); console.log(data);
+            data = await printSomething('B'); console.log(data);
+        };
+
+        Show();
+
+    </script>
+
+
+
+
+}

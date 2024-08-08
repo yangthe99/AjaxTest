@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "CallAPI";
+}
+
+<h1>CallAPI</h1>
+<img src="~/img/chiikawa.png" style="width: 100px"/>
+<button id="btnCallAPI" class="btn btn-primary">Call Ajax</button>
+<div id="div1" class="alert alert-secondary mt-3">
+   
+
+
+</div>
+@section Scripts
+{
+<script>
+        const btnCallAPI = document.querySelector("#btnCallAPI");
+        const divMessage = document.querySelector("#div1");
+
+    // btnCallAPI.addEventListener('click', () => {
+    //         fetch('@Url.Content("~/api/index")')
+    //             .then(Response => {
+    //                 console.log(Response)
+    //                 return Response.text()
+    //             })
+    //            .then(data => divMessage.innerHTML=`<h2>${data}</h2>`)
+    // })
+        btnCallAPI.addEventListener('click', async () => {
+            try {
+               
+                const response = await fetch('@Url.Content("~/api/index")')
+                if (!response.ok )
+                    throw new Error(`錯誤代碼：${response.status}`);
+
+                const data = await response.text();
+                divMessage.innerHTML = `<h3>${data}</h3>`
+            }
+            catch(error) {
+                divMessage.innerHTML = `<h3>${error.message}</h3>`
+            }            
+        })
+</script>
+
+}

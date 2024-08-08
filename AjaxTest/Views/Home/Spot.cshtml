@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "JsonTest";
+}
+
+@section Styles {
+}
+
+<h1>JSON 作業-Spot</h1>
+<ul id="ul1">
+</ul>
+
+<div class="card" style="width: 18rem;">
+    <img src="~/img/chiikawa.png" class="card-img-top" alt="spotName">
+    <div class="card-body">
+        <h5 class="card-title">Spottitle</h5>
+        <p class="card-text">範例(TextBody)</p>
+        <footer class="card-text">Address</footer>
+    </div>
+</div>
+
+<div class="card" style="width: 18rem;">
+    <img src="~/img/chiikawa.png" class="card-img-top" alt="spotName">
+    <div id="card" class="card-body">
+        <h5 class="card-title">Spottitle</h5>
+        <p class="card-text">範例(TextBody)</p>
+        <footer class="card-text">Address</footer>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script id="spotlist" src="~/js/travel.js"></script>
+    <script>
+        console.log(spots);
+        const spots = document.querySelector("#spotlist");
+        const spotCard = document.querySelector('#card')
+
+
+        // const eleSpots = spots.CommonFormat.Section.map(spot => {
+        //     const { stitle, xbody, address } = spot
+        //     return (
+        //         `
+        //                         <div>
+        //                            <h5 class="card-title">${stitle}</h5>
+        //                             <p class="card-text">${xbody}</p>
+        //                            <footer class="card-text">${address}</footer>
+        //                         </div>
+        //                         `
+        //     )
+        // });
+    </script>
+}
