@@ -16,7 +16,7 @@ namespace AjaxTest.Controllers
 
         public IActionResult Index()
         {
-            var add = _context.Addresses.Where(p => p.Id ==34204);
+            var add = _context.Addresses.Where(p => p.Id == 34204);
             return View(add);
         }
 
@@ -34,6 +34,10 @@ namespace AjaxTest.Controllers
             return View();
         }
         public IActionResult Address()
+        {
+            return View();
+        }
+        public IActionResult ShowImg()
         {
             return View();
         }

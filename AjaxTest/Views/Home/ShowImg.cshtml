@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "ShowImg";
+}
+
+<h1>ShowImg</h1>
+
+
+@section Styles {
+    <style>
+
+
+    </style>
+}
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+<img id="img1" />
+@section Scripts {
+    <script>
+        (async () => {
+
+            const api = '@Url.Content("~/API/Avatar")';
+            const response = await fetch(api);
+            const data = await response.blob();
+            showImg.src = URL.createObjectURL(data);
+        })();
+
+        const showImg = document.querySelector('#img1');
+
+    </script>
+}

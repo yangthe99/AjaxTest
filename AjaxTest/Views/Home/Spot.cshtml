@@ -40,13 +40,15 @@
             const { stitle, xbody, address,file } = spot;
 
             const imgKeys = Object.keys(file.img || {});
-            const firstImg = imgKeys.length > 0 ? file.img[imgKeys[0]] : {};
-            const { description = 'No Image', text = 'default.jpg' } = firstImg;
+            // const firstImg = imgKeys.length > 0 ? file.img[imgKeys[0]] : {};
+            //示範:  const imgSrc = section.file?.img?.[0]?.text ?? section.file?.img?.text ?? '';
+            const firstImg = spot.file?.img?.[0]?.text ?? spot.file?.img?.text ?? '';
+         
             return (
                 `
                 <div class="col-md-4 mb-4">
                 <div id="card" class="card" style="width: 18rem;">
-                <img src="${text}" class="card-img-top" alt="${description}" title="${stitle}">
+               <img src="${firstImg}" class="card-img-top" alt="${stitle}" title="${stitle}">
                 <div class="card-body">
                 <h5 class="card-title">${stitle}</h5>
                 <p class="card-text">${xbody.substring(0, 51)}...</p>
