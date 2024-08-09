@@ -12,18 +12,31 @@
     </style>
 }
 <a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
-<img id="img1" />
+<br />
+<br />
+<input id="imgID" value="1" />
+<br />
+<br />
+<img id="img1" class="w-50 img-thumbnail" />
 @section Scripts {
     <script>
-        (async () => {
+        // (async () => {
 
-            const api = '@Url.Content("~/API/Avatar")';
+        //     const api = '@Url.Content("~/API/Avatar")';
+        //     const response = await fetch(api);
+        //     const data = await response.blob();
+        //     showImg.src = URL.createObjectURL(data);
+        // })();
+
+        const showImg = document.querySelector('#img1');
+        const imgid = document.querySelector('#imgID');
+
+        imgid.addEventListener('blur', async () => {
+            const api = `@Url.Content("~/API/Avatar")/${imgid.value}`;
             const response = await fetch(api);
             const data = await response.blob();
             showImg.src = URL.createObjectURL(data);
-        })();
-
-        const showImg = document.querySelector('#img1');
+        });
 
     </script>
 }

@@ -44,5 +44,13 @@ namespace AjaxTest.Controllers
             }
             return NotFound();
         }
+
+        public IActionResult Register(userDTO _user) {
+            if (string.IsNullOrEmpty(_user.userName))
+            {
+                _user.userName = "Guest";
+            }
+            return Content($"{_user.userName} - {_user.userEmail} - {_user.userAge}", "text/plain");
+        }
     }
 }
