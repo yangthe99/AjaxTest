@@ -8,14 +8,14 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-
-@model IEnumerable<AjaxTest.Models.Address>
+<a asp-controller="Home" asp-action="Spot" class="btn btn-primary">Spot作業1</a>
+@* @model IEnumerable<AjaxTest.Models.Address>
 <ul>
     @foreach (var add in Model)
     {
         <li>@add.Id</li>
     }
-</ul>
+</ul> *@
 
 @section Scripts {
     <script>

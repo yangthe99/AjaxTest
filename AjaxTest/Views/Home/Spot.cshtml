@@ -7,7 +7,7 @@
 }   
 
 
-<h1>JSON 作業-Spot</h1>
+<h1>JSON 作業-Spot</h1><a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
 <ul id="ul1">
 </ul>
 
@@ -44,8 +44,8 @@
             return (
                 `
                 <div class="col-md-4 mb-4">
-                <div id="card" class="card btn" style="width: 18rem;">
-                <img src="${text}" class="card-img-top" alt="${description}">
+                <div id="card" class="card" style="width: 18rem;">
+                <img src="${text}" class="card-img-top" alt="${description}" title="${stitle}">
                 <div class="card-body">
                 <h5 class="card-title">${stitle}</h5>
                 <p class="card-text">${xbody.substring(0, 51)}...</p>
