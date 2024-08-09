@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Address";
+}
+
+<h1>Address</h1><a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+<br />
+<br />
+<br />
+
+@section Styles{
+    <style>
+
+
+    </style>
+}
+
+<select id="selectCity">
+    <option value="1">item1</option>
+    <option value ="2">item3</option>
+    <option value="3">item2</option>
+</select>
+
+<div id="div1"></div>
+
+@section Scripts{
+    <script>
+
+        (async() => { 
+            const api = '@Url.Content("~/API/Cities")';
+            const response = await fetch(api);
+            const cities = await response.json();
+            // console.log(city);
+            const eleCities = cities.map(city => `<option value='${city}'>${city}</option>`)
+            selCity.innerHTML = eleCities.join("")
+        })()
+
+        
+
+        const selCity = document.querySelector('#selectCity');
+        const divInfo = document.querySelector('#div1')
+        selCity.addEventListener('change', () => {
+            divInfo.textContent = selCity.value;
+        })
+    </script>
+}

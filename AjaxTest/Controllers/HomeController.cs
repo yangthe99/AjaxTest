@@ -33,6 +33,10 @@ namespace AjaxTest.Controllers
         {
             return View();
         }
+        public IActionResult Address()
+        {
+            return View();
+        }
         public IActionResult Spot()
         {
             return View();

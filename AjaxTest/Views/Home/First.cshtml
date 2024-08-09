@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<AjaxTest.Models.Category>
+
 <ul>
     @foreach (var add in Model)
     {
         <li>@add.CategoryName</li>
     }
 </ul>
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>

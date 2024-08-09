@@ -4475,10 +4475,11 @@
                 "address": "臺北市  萬華區成都路51號",
                 "xpostDate": "2015/09/22",
                 "file": {
-                    "img": {
+                    "img": 
+                        {
                         "@description": "天后宮",
                         "text": "http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11001499.jpg"
-                    }
+                    },
                 },
                 "langinfo": "10",
                 "POI": "Y",
