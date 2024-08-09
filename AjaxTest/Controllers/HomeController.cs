@@ -61,5 +61,15 @@ namespace AjaxTest.Controllers
             return View();
 
         }
+        public IActionResult RegisterForm()
+        {
+            return View();
+
+        }   
+        public IActionResult RegisterFile()
+        {
+            return View();
+
+        }
     }
 }
