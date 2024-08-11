@@ -69,14 +69,31 @@ namespace AjaxTest.Controllers
             //WebRootPath: 傳到wwwroot
             //ContentRootPath: 傳到專案根目錄
             //string strPath = _webHostEnvironment.WebRootPath;
-            string strPath = Path.Combine(_webHostEnvironment.WebRootPath,"img",_user.userPhoto.FileName);
+            string strPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", _user.userPhoto.FileName);
 
             using (var fileStream = new FileStream(strPath, FileMode.Create))
             {
                 _user.userPhoto.CopyTo(fileStream);
             }
+
+            //寫進資料庫
+            Member member = new Member();
+            member.Name = _user.userName;
+            member.Email = _user.userEmail;
+            member.Age = _user.userAge;
+            member.FileName = _user.userPhoto.FileName;
+            //將上船的檔案轉成二進位
+            byte[] imgByte = null;
+            using (var memorySteam = new MemoryStream()) { 
+            _user.userPhoto.CopyTo(memorySteam);
+               imgByte = memorySteam.ToArray();
+            }
+            member.FileData = imgByte;
+            _context.Members.Add(member);
+            _context.SaveChanges();
+
+
             return Content(strPath);
         }
-
     }
 }

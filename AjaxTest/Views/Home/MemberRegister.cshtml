@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "MemberRegister";
+}
+<h1>MemberRegister</h1>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+<br />
+
+@section Styles {
+
+}
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form id="userForm">
+            <div class="mb-3">
+                <label for="InputUserName" class="form-label">姓名</label>
+                <input type="text" class="form-control" id="InputUserName" name="userName">
+            </div>
+            <div class="mb-3">
+                <label for="InputUserEmail" class="form-label">電子郵件</label>
+                <input type="email" class="form-control" id="InputUserEmail" name="userEmail">
+            </div>
+            <div class="mb-3">
+                <label for="InputPassword" class="form-label">密碼</label>
+                <input type="text" class="form-control" id="InputPassword" name="userPassword">
+            </div>
+            <div class="mb-3">
+                <label for="InputPasswordConfirm" class="form-label">密碼確認</label>
+                <input type="text" class="form-control" id="InputPasswordConfirm" name="userPasswordConfirm">
+            </div>
+            <div class="mb-3">
+                <label for="InputUserAge" class="form-label">年紀</label>
+                <input type="number" class="form-control" id="InputUserAge" name="userAge">
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">頭像</label>
+                <input class="form-control" type="file" id="formFile" name="userPhoto">
+                <img id="img1" class="mt-3 w-50 img-thumbnail" />
+            </div>
+            <button type="button" id="btn1" class="btn btn-primary">Click</button>
+        </form>
+        <div id="div1" class="alert alert-info mt-3"></div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+@section Scripts {
+
+}

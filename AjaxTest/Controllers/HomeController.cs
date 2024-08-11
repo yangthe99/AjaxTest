@@ -65,11 +65,17 @@ namespace AjaxTest.Controllers
         {
             return View();
 
-        }   
+        }
         public IActionResult RegisterFile()
         {
             return View();
-
+        }
+              public IActionResult RegistertoServer()
+        {
+            return View();
+        }  public IActionResult MemberRegister()
+        {
+            return View();
         }
     }
 }
