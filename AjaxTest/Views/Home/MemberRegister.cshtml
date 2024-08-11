@@ -17,6 +17,7 @@
             <div class="mb-3">
                 <label for="InputUserName" class="form-label">姓名</label>
                 <input type="text" class="form-control" id="InputUserName" name="userName">
+                <label for="InputUserName" id="nameExist" class="alert-danger"></label>
             </div>
             <div class="mb-3">
                 <label for="InputUserEmail" class="form-label">電子郵件</label>
@@ -47,5 +48,64 @@
 </div>
 
 @section Scripts {
+    <script>
+        const btn = document.querySelector('#btn1');
+        const divInfo = document.querySelector('#div1');
+        const formData = new FormData(document.querySelector('#userForm'));
+        const aFile = document.querySelector('#formFile');
+        const theImg = document.querySelector('#img1');
 
+        const InputUserName = document.querySelector('#InputUserName');
+        const nameExist = document.querySelector('#nameExist');
+
+        //檢查帳號
+        InputUserName.addEventListener('blur', async () => {
+            nameExist.textContent = '';
+            const userName = InputUserName.value.trim();
+            if (userName) {
+                try {
+                    const api = '@Url.Content("~/API/CheckAccount/")'
+                    const response = await fetch(`${api}?inputName=${encodeURIComponent(userName)}`);
+                    const result = await response.json();
+
+                    if (result.exists) {
+                        InputUserName.classList.add('is-invalid');
+                        nameExist.textContent = '帳號已存在，請輸入其他內容';
+                    } else {
+                        InputUserName.classList.remove('is-invalid');
+                        nameExist.textContent = '';
+                    }
+                } catch (error) {
+                    console.error('帳號檢查時發生錯誤:', error);
+                    nameExist.textContent = '帳號檢查時發生錯誤';
+                }
+            }
+        });
+
+
+
+        aFile.addEventListener('change', () => {
+            const theFile = aFile.files[0];
+            // console.log(theFile.name);
+            const reader = new FileReader();
+            reader.readAsDataURL(theFile);
+            reader.addEventListener('load', () => {
+                theImg.src = reader.result;
+            })
+        });
+
+        btn.addEventListener('click', async (event) => {
+
+            const formData = new FormData(document.querySelector('#userForm'))
+
+            const api = '@Url.Content("~/API/RegisterFile/")'
+            const response = await fetch(api, {
+                method: 'POST',
+                body: formData
+            })
+
+            const data = await response.text()
+            divInfo.innerHTML = `<h3>${data}</h3>`
+        });
+    </script>
 }

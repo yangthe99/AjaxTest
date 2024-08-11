@@ -1,6 +1,7 @@
 ﻿using AjaxTest.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AjaxTest.Controllers
 {
@@ -8,7 +9,7 @@ namespace AjaxTest.Controllers
     {
         private readonly ILogger<APIController> _logger;
         private readonly MyDbContext _context;
-       private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public APIController(ILogger<APIController> logger, MyDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
@@ -64,7 +65,6 @@ namespace AjaxTest.Controllers
             //string info = $"{_user.userPhoto.FileName}-{_user.userPhoto.Length}-{_user.userPhoto.ContentType}";
             //return Content(info,"text/plain",System.Text.Encoding.UTF8);
 
-
             //檔案上傳
             //WebRootPath: 傳到wwwroot
             //ContentRootPath: 傳到專案根目錄
@@ -84,9 +84,10 @@ namespace AjaxTest.Controllers
             member.FileName = _user.userPhoto.FileName;
             //將上船的檔案轉成二進位
             byte[] imgByte = null;
-            using (var memorySteam = new MemoryStream()) { 
-            _user.userPhoto.CopyTo(memorySteam);
-               imgByte = memorySteam.ToArray();
+            using (var memorySteam = new MemoryStream())
+            {
+                _user.userPhoto.CopyTo(memorySteam);
+                imgByte = memorySteam.ToArray();
             }
             member.FileData = imgByte;
             _context.Members.Add(member);
@@ -94,6 +95,15 @@ namespace AjaxTest.Controllers
 
 
             return Content(strPath);
+        }
+
+        public async Task<IActionResult> CheckAccount(string inputName)
+        {
+            var userExists = await _context.Members.AnyAsync(m => m.Name == inputName);
+
+            var result = new { exists = userExists };
+            return Json(result);
+
         }
     }
 }
