@@ -61,34 +61,21 @@ namespace AjaxTest.Controllers
 
         public IActionResult RegisterFile(userDTO _user)
         {
-            if (string.IsNullOrEmpty(_user.userName))
-            {
-                _user.userName = "Guest";
-            }
-
-            string info = $"{_user.userPhoto.FileName}-{_user.userPhoto.Length}-{_user.userPhoto.ContentType}";
-
-
-            //實際路徑 C:\Shared\012_Ajax\workspace\AjaxDemo\wwwroot\uploads\abc.jpg
-            //string strPath = @"C:\Shared\012_Ajax\workspace\AjaxDemo\wwwroot\uploads\abc.jpg";
-            //string strPath = _webHostEnvironment.WebRootPath;
-            //C:\Shared\012_Ajax\workspace\AjaxDemo\wwwroot
-            //string strPath = _webHostEnvironment.ContentRootPath;
-            //C:\Shared\012_Ajax\workspace\AjaxDemo
+            //string info = $"{_user.userPhoto.FileName}-{_user.userPhoto.Length}-{_user.userPhoto.ContentType}";
+            //return Content(info,"text/plain",System.Text.Encoding.UTF8);
 
 
             //檔案上傳
-            string strPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", _user.userPhoto.FileName);
+            //WebRootPath: 傳到wwwroot
+            //ContentRootPath: 傳到專案根目錄
+            //string strPath = _webHostEnvironment.WebRootPath;
+            string strPath = Path.Combine(_webHostEnvironment.WebRootPath,"img",_user.userPhoto.FileName);
 
             using (var fileStream = new FileStream(strPath, FileMode.Create))
             {
                 _user.userPhoto.CopyTo(fileStream);
             }
-
-            //return Content($"{_user.userName} - {_user.userEmail} - {_user.userAge}", "text/plain");
-            //return Content(info,"text/plain",System.Text.Encoding.UTF8);
             return Content(strPath);
-
         }
 
     }
