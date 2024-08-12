@@ -104,10 +104,55 @@ namespace AjaxTest.Controllers
 
         }
 
-        //[HttpPost]
-        //public IActionResult Spots([FromBody] SearchDTO searchDTO)
-        //{ 
-        //var spots = searchDTO.categoryId ==0? _context.Sp
-        //}
+        [HttpPost]
+        public IActionResult Spots([FromBody] SearchDTO _searchDTO)
+        {
+            //按照分類編號讀取景點
+            var spots = _searchDTO.categoryId == 0 ? _context.SpotImagesSpots : _context.SpotImagesSpots.Where(s => s.CategoryId == _searchDTO.categoryId);
+            
+            if (!string.IsNullOrEmpty(_searchDTO.keyword)){ 
+                spots= spots.Where(s=>s.SpotTitle.Contains(_searchDTO.keyword) || s.SpotDescription.Contains(_searchDTO.keyword));
+            };
+
+            //關鍵字搜尋
+            if (!string.IsNullOrEmpty(_searchDTO.keyword))
+            {
+                spots = spots.Where(s => s.SpotTitle.Contains(_searchDTO.keyword) || s.SpotDescription.Contains(_searchDTO.keyword));
+            }
+
+            //排序
+            switch (_searchDTO.sortBy)
+            {
+                case "spotTitle":
+                    spots = _searchDTO.sortType == "asc" ? spots.OrderBy(s => s.SpotTitle) : spots.OrderByDescending(s => s.SpotTitle);
+                    break;
+                case "categoryId":
+                    spots = _searchDTO.sortType == "asc" ? spots.OrderBy(s => s.CategoryId) : spots.OrderByDescending(s => s.CategoryId);
+                    break;
+                default:
+                    spots = _searchDTO.sortType == "asc" ? spots.OrderBy(s => s.SpotId) : spots.OrderByDescending(s => s.SpotId);
+                    break;
+            }
+
+
+
+            //總共有多少筆資料
+            int totalCount = spots.Count();
+            int pageSize = _searchDTO.pageSize;
+            int page = _searchDTO.page;
+            //計算總共有幾頁
+            int totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            //分頁
+            spots = spots.Skip((page - 1) * pageSize).Take(pageSize);
+
+
+            //設定回傳資料
+            SpotsPagingDTO pagingDTO = new SpotsPagingDTO();
+            pagingDTO.TotalPages = totalPages;
+            pagingDTO.SpotsResult = spots.ToList();
+
+            return Json(pagingDTO);
+
+        }
     }
 }

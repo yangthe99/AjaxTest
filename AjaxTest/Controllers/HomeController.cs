@@ -70,10 +70,15 @@ namespace AjaxTest.Controllers
         {
             return View();
         }
-              public IActionResult RegistertoServer()
+        public IActionResult RegistertoServer()
         {
             return View();
-        }  public IActionResult MemberRegister()
+        }
+        public IActionResult MemberRegister()
+        {
+            return View();
+        }
+        public IActionResult Travel()
         {
             return View();
         }
