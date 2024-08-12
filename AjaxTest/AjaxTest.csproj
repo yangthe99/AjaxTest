@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="efpt.config.json.user" />
   </ItemGroup>
 
   <ItemGroup>

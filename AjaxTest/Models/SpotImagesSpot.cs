@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AjaxTest.Models;
 
-public partial class Spot
+public partial class SpotImagesSpot
 {
     public int SpotId { get; set; }
 
@@ -28,4 +28,6 @@ public partial class Spot
     public string ContactPhone { get; set; }
 
     public DateTime? DateCreated { get; set; }
+
+    public string SpotImage { get; set; }
 }

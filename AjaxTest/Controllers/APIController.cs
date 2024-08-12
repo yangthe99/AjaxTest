@@ -7,12 +7,10 @@ namespace AjaxTest.Controllers
 {
     public class APIController : Controller
     {
-        private readonly ILogger<APIController> _logger;
-        private readonly MyDbContext _context;
+        private readonly MyDBContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public APIController(ILogger<APIController> logger, MyDbContext context, IWebHostEnvironment webHostEnvironment)
+        public APIController(MyDBContext context, IWebHostEnvironment webHostEnvironment)
         {
-            _logger = logger;
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -21,34 +19,34 @@ namespace AjaxTest.Controllers
             string content = "Hello API! 哈哈";
             return Content(content, "text/plain", System.Text.Encoding.UTF8);
         }
+       
+        //public IActionResult Cities()
+        //{
+        //    var cities = _context.Addresses.Select(x => x.City).Distinct();
+        //    return Json(cities);
+        //}
 
-        public IActionResult Cities()
-        {
-            var cities = _context.Addresses.Select(x => x.City).Distinct();
-            return Json(cities);
-        }
+        //public IActionResult SiteID()
+        //{
+        //    var siteID = _context.Addresses.Select(x => x.SiteId).Distinct();
+        //    return Json(siteID);
+        //}
+        //public IActionResult Road()
+        //{
+        //    var roads = _context.Addresses.Select(x => x.Road).Distinct();
+        //    return Json(roads);
+        //}
 
-        public IActionResult SiteID()
-        {
-            var siteID = _context.Addresses.Select(x => x.SiteId).Distinct();
-            return Json(siteID);
-        }
-        public IActionResult Road()
-        {
-            var roads = _context.Addresses.Select(x => x.Road).Distinct();
-            return Json(roads);
-        }
-
-        public IActionResult Avatar(int id = 1)
-        {
-            var member = _context.Members.Find(id);
-            if (member != null)
-            {
-                byte[] img = member.FileData;
-                if (img != null) { return File(img, "image/jpeg"); }
-            }
-            return NotFound();
-        }
+        //public IActionResult Avatar(int id = 1)
+        //{
+        //    var member = _context.Members.Find(id);
+        //    if (member != null)
+        //    {
+        //        byte[] img = member.FileData;
+        //        if (img != null) { return File(img, "image/jpeg"); }
+        //    }
+        //    return NotFound();
+        //}
 
         public IActionResult Register(userDTO _user)
         {
@@ -100,10 +98,16 @@ namespace AjaxTest.Controllers
         public async Task<IActionResult> CheckAccount(string inputName)
         {
             var userExists = await _context.Members.AnyAsync(m => m.Name == inputName);
-
+            
             var result = new { exists = userExists };
             return Json(result);
 
         }
+
+        //[HttpPost]
+        //public IActionResult Spots([FromBody] SearchDTO searchDTO)
+        //{ 
+        //var spots = searchDTO.categoryId ==0? _context.Sp
+        //}
     }
 }

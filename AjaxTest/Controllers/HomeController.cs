@@ -7,8 +7,8 @@ namespace AjaxTest.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly MyDbContext _context;
-        public HomeController(ILogger<HomeController> logger, MyDbContext context)
+        private readonly MyDBContext _context;
+        public HomeController(ILogger<HomeController> logger, MyDBContext context)
         {
             _logger = logger;
             _context = context;
