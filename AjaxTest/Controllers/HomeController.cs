@@ -1,4 +1,5 @@
 using AjaxTest.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -79,6 +80,10 @@ namespace AjaxTest.Controllers
             return View();
         }
         public IActionResult Travel()
+        {
+            return View();
+        }
+        public IActionResult Cors()
         {
             return View();
         }

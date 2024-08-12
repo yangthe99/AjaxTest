@@ -9,6 +9,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MyDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB")));
 
+//設定允許的存取的來源
+builder.Services.AddCors(option => {
+    option.AddPolicy("AllowAll", builder=>builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,7 +28,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseCors("AllowAll");  //註冊使用CORS的Middleware
 app.UseAuthorization();
 
 app.MapControllerRoute(
