@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "TravelSpots";
+}
+
+<h1>作業4: 景點</h1>
+
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+
+@section Styles {
+    <style>
+        /*         .card-img-top {
+                    max-height: 250px;
+                    width: 100%;
+                    object-fit: cover;
+                } */
+
+    </style>
+}
+<div class="row mb-3">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm" id="ul1">
+                @*                 <li class="page-item disabled" id="prevBtn">
+                <a class="page-link">Previous</a>
+                </li>
+                <!-- 分頁按鈕會插入到這裡 -->
+                <li class="page-item" id="nextBtn">
+                <a class="page-link">Next</a>
+                </li> *@
+            </ul>
+        </nav>
+    </div>
+    <div class="col-3">
+        <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
+</div>
+@section Scripts {
+    <script>
+        const searchData = {
+            "categoryId": 0,
+            "keyword": "北投",
+            "page": 2,
+            "pageSize": 9,
+            "sortType": "desc",
+            "sortBy": "categoryId"
+        }
+        const divSpots = document.querySelector('#div1')
+        const inputSearch = document.querySelector('#inputSearch')
+        const ulPages = document.querySelector('#ul1')
+
+        //關鍵字搜尋
+        inputSearch.addEventListener('keydown', async (event) => {
+            if (event.which === 13) {
+                searchData.keyword = inputSearch.value;
+                loadSpots();
+            }
+        })
+
+        //載入景點資料
+        const loadSpots = async () => {
+            const api = '@Url.Content("~/API/Spots")'
+            const response = await fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(searchData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            const data = await response.json()
+            console.log(data)
+
+            //JSON 資料讀取及顯示
+            const spots = data.spotsResult.map(spot => {
+                const { address, spotTitle, spotDescription, spotImage, spotId } = spot
+                return (`
+                                             <div class="col">
+                                                <div class="card h-100">
+                                                    <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${spotTitle}</h5>
+                                                        <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}...</p>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                       <small class="text-body-secondary" > ${address} </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                                `)
+            })
+
+            divSpots.innerHTML = spots.join("")
+
+            //產生分頁按鈕
+            let liPages = "";
+            for (let i = 1, max = data.totalPages; i <= max; i++) {
+                liPages += `<li class="page-item" onclick="pagingHandler(${i})"> <a class="page-link"> ${i} </a></li >`
+            }
+            ulPages.innerHTML = liPages;
+        }
+
+        //分頁
+        const pagingHandler = page => {
+            searchData.page = page;
+            loadSpots()
+        }
+        loadSpots()
+
+    </script>
+
+}

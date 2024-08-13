@@ -1,13 +1,28 @@
 ﻿@{
     ViewData["Title"] = "MemberRegister";
 }
-<h1>MemberRegister</h1>
+<h1>作業2 & 3: 會員註冊含檢查帳號</h1>
 
 <a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
 <br />
 
 @section Styles {
+    <style>
+        .text-error {
+            color: red;
+        }
 
+        .text-success {
+            color: green;
+        }
+
+        #img1 {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+        }
+
+    </style>
 }
 
 <div class="row">
@@ -17,28 +32,30 @@
             <div class="mb-3">
                 <label for="InputUserName" class="form-label">姓名</label>
                 <input type="text" class="form-control" id="InputUserName" name="userName">
-                <label for="InputUserName" id="nameExist" class="alert-danger"></label>
+                <label for="InputUserName" id="nameExist"></label>
             </div>
             <div class="mb-3">
                 <label for="InputUserEmail" class="form-label">電子郵件</label>
                 <input type="email" class="form-control" id="InputUserEmail" name="userEmail">
+                <label for="InputUserEmail" id="Emailneeded"></label>
             </div>
             <div class="mb-3">
                 <label for="InputPassword" class="form-label">密碼</label>
-                <input type="text" class="form-control" id="InputPassword" name="userPassword">
+                <input type="password" class="form-control" id="InputPassword" name="userPassword">
             </div>
             <div class="mb-3">
                 <label for="InputPasswordConfirm" class="form-label">密碼確認</label>
-                <input type="text" class="form-control" id="InputPasswordConfirm" name="userPasswordConfirm">
+                <input type="password" class="form-control" id="InputPasswordConfirm" name="userPasswordConfirm">
+                <label for="InputPasswordConfirm" id="PasswordConfirm"></label>
             </div>
             <div class="mb-3">
                 <label for="InputUserAge" class="form-label">年紀</label>
-                <input type="number" class="form-control" id="InputUserAge" name="userAge">
+                <input type="number" min="0" step="1" class="form-control" id="InputUserAge" name="userAge">
             </div>
             <div class="mb-3">
-                <label for="formFile" class="form-label">頭像</label>
+                <label for="formFile" class="form-label">頭像(無上傳頭像會使用預設圖片)</label>
                 <input class="form-control" type="file" id="formFile" name="userPhoto">
-                <img id="img1" class="mt-3 w-50 img-thumbnail" />
+                <img id="img1" class="mt-3 w-50 img-thumbnail" title="預設圖片" />
             </div>
             <button type="button" id="btn1" class="btn btn-primary">Click</button>
         </form>
@@ -55,12 +72,13 @@
         const aFile = document.querySelector('#formFile');
         const theImg = document.querySelector('#img1');
 
-        const InputUserName = document.querySelector('#InputUserName');
-        const nameExist = document.querySelector('#nameExist');
+
 
         //檢查帳號
+        const InputUserName = document.querySelector('#InputUserName');
+        const nameExist = document.querySelector('#nameExist');
         InputUserName.addEventListener('blur', async () => {
-            nameExist.textContent = '';
+            //nameExist.textContent = '';
             const userName = InputUserName.value.trim();
             if (userName) {
                 try {
@@ -69,30 +87,75 @@
                     const result = await response.json();
 
                     if (result.exists) {
-                        InputUserName.classList.add('is-invalid');
-                        nameExist.textContent = '帳號已存在，請輸入其他內容';
+                        updateStatus(nameExist, InputUserName, '帳號已存在', 'text-error', 'is-invalid');
                     } else {
-                        InputUserName.classList.remove('is-invalid');
-                        nameExist.textContent = '';
+                        updateStatus(nameExist, InputUserName, '帳號可使用', 'text-success', 'is-valid');
                     }
                 } catch (error) {
                     console.error('帳號檢查時發生錯誤:', error);
-                    nameExist.textContent = '帳號檢查時發生錯誤';
+                    updateStatus('帳號檢查時發生錯誤', 'text-error', 'is-invalid');
                 }
+            } else {
+                updateStatus(nameExist, InputUserName, '請輸入姓名', 'text-error', 'is-invalid');
+            }
+        });
+        //todo: 信箱, 年齡提醒
+        //檢查密碼
+        const InputPasswordConfirm = document.querySelector('#InputPasswordConfirm');
+        const InputPassword = document.querySelector('#InputPassword');
+        const PasswordConfirm = document.querySelector('#PasswordConfirm');
+        InputPasswordConfirm.addEventListener('blur', async () => {
+            if (InputPasswordConfirm.value != InputPassword.value) {
+                InputPasswordConfirm.classList.add('is-invalid');
+                PasswordConfirm.textContent = '密碼不一致，請重新輸入';
+                PasswordConfirm.classList.add('text-error');
+                PasswordConfirm.classList.remove('text-success');
+            } else if (InputPasswordConfirm.value === '') {
+                PasswordConfirm.textContent = '';
+            } else {
+                InputPasswordConfirm.classList.remove('is-invalid');
+                PasswordConfirm.textContent = '密碼一致';
+                PasswordConfirm.classList.add('text-success');
+                PasswordConfirm.classList.remove('text-error');
             }
         });
 
+        //沒有頭貼
+        document.addEventListener('DOMContentLoaded', () => {
+            const formFile = document.querySelector('#formFile');
+            const img1 = document.querySelector('#img1');
+            const defaultImage = '@Url.Content("~/img/s512_halloween201901_30_0.png")';
 
+            // 預設圖像
+            img1.src = defaultImage;
 
-        aFile.addEventListener('change', () => {
-            const theFile = aFile.files[0];
-            // console.log(theFile.name);
-            const reader = new FileReader();
-            reader.readAsDataURL(theFile);
-            reader.addEventListener('load', () => {
-                theImg.src = reader.result;
-            })
+            // 當選擇文件時更新圖像預覽
+            formFile.addEventListener('change', () => {
+                const file = formFile.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        img1.src = reader.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    img1.src = defaultImage;
+                }
+            });
         });
+
+
+        // aFile.addEventListener('change', () => {
+        //     const theFile = aFile.files[0];
+        //     // console.log(theFile.name);
+        //     const reader = new FileReader();
+        //     reader.readAsDataURL(theFile);
+        //     reader.addEventListener('load', () => {
+        //         theImg.src = reader.result;
+        //     })
+        // });
+
+
 
         btn.addEventListener('click', async (event) => {
 
@@ -107,5 +170,13 @@
             const data = await response.text()
             divInfo.innerHTML = `<h3>${data}</h3>`
         });
+
+
+
+        const updateStatus = (Reminder, inputTag, message, textClass, inputClass) => {
+            Reminder.textContent = message;
+            Reminder.className = `text ${textClass}`;
+            inputTag.className = `form-control ${inputClass}`;
+        };
     </script>
 }

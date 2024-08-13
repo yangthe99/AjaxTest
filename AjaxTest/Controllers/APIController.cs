@@ -1,5 +1,6 @@
 ﻿using AjaxTest.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,34 +20,34 @@ namespace AjaxTest.Controllers
             string content = "Hello API! 哈哈";
             return Content(content, "text/plain", System.Text.Encoding.UTF8);
         }
-       
-        //public IActionResult Cities()
-        //{
-        //    var cities = _context.Addresses.Select(x => x.City).Distinct();
-        //    return Json(cities);
-        //}
 
-        //public IActionResult SiteID()
-        //{
-        //    var siteID = _context.Addresses.Select(x => x.SiteId).Distinct();
-        //    return Json(siteID);
-        //}
-        //public IActionResult Road()
-        //{
-        //    var roads = _context.Addresses.Select(x => x.Road).Distinct();
-        //    return Json(roads);
-        //}
+        public IActionResult Cities()
+        {
+            var cities = _context.Addresses.Select(x => x.City).Distinct();
+            return Json(cities);
+        }
 
-        //public IActionResult Avatar(int id = 1)
-        //{
-        //    var member = _context.Members.Find(id);
-        //    if (member != null)
-        //    {
-        //        byte[] img = member.FileData;
-        //        if (img != null) { return File(img, "image/jpeg"); }
-        //    }
-        //    return NotFound();
-        //}
+        public IActionResult SiteID()
+        {
+            var siteID = _context.Addresses.Select(x => x.SiteId).Distinct();
+            return Json(siteID);
+        }
+        public IActionResult Road()
+        {
+            var roads = _context.Addresses.Select(x => x.Road).Distinct();
+            return Json(roads);
+        }
+
+        public IActionResult Avatar(int id = 1)
+        {
+            var member = _context.Members.Find(id);
+            if (member != null)
+            {
+                byte[] img = member.FileData;
+                if (img != null) { return File(img, "image/jpeg"); }
+            }
+            return NotFound();
+        }
 
         public IActionResult Register(userDTO _user)
         {
@@ -58,7 +59,7 @@ namespace AjaxTest.Controllers
             return Content($"{_user.userName} - {_user.userEmail} - {_user.userAge}", "text/plain");
         }
 
-        public IActionResult RegisterFile(userDTO _user)
+        public async Task<IActionResult> RegisterFile(userDTO _user)
         {
             //string info = $"{_user.userPhoto.FileName}-{_user.userPhoto.Length}-{_user.userPhoto.ContentType}";
             //return Content(info,"text/plain",System.Text.Encoding.UTF8);
@@ -67,32 +68,84 @@ namespace AjaxTest.Controllers
             //WebRootPath: 傳到wwwroot
             //ContentRootPath: 傳到專案根目錄
             //string strPath = _webHostEnvironment.WebRootPath;
-            string strPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", _user.userPhoto.FileName);
+            //string strPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", _user.userPhoto.FileName);
 
-            using (var fileStream = new FileStream(strPath, FileMode.Create))
+            //using (var fileStream = new FileStream(strPath, FileMode.Create))
+            //{
+            //    _user.userPhoto.CopyTo(fileStream);
+            //}
+
+            // 確保信箱、密碼和確認密碼和年齡不為 null
+            var errorMessages = new List<string>();
+
+            if (string.IsNullOrEmpty(_user.userName))
+                errorMessages.Add("姓名");
+            if (string.IsNullOrEmpty(_user.userEmail))
+                errorMessages.Add("信箱");
+            if (string.IsNullOrEmpty(_user.userPassword))
+                errorMessages.Add("密碼");
+            if (string.IsNullOrEmpty(_user.userPasswordConfirm))
+                errorMessages.Add("密碼確認");
+            if (string.IsNullOrEmpty(_user.userAge.ToString()))
+                errorMessages.Add("年齡");
+
+            if (errorMessages.Any())
             {
-                _user.userPhoto.CopyTo(fileStream);
+                return Content(string.Join(", ", errorMessages) + "尚未輸入，請確認", "text/html");
+            }
+            else
+            {
+                try
+                {
+                    //寫進資料庫
+                    Member member = new Member();
+                    member.Name = _user.userName;
+                    member.Email = _user.userEmail;
+                    member.Age = _user.userAge;
+                    member.FileName = _user.userPhoto != null ? _user.userPhoto.FileName : "default";
+                    member.Password = new PasswordHasher<Member>().HashPassword(null, _user.userPassword);
+                    member.Salt = new PasswordHasher<Member>().HashPassword(null, _user.userPasswordConfirm);
+
+                    //將上船的檔案轉成二進位
+                    byte[] imgByte = null;
+                    //using (var memorySteam = new MemoryStream())
+                    //{
+                    //    _user.userPhoto.CopyTo(memorySteam);
+                    //    imgByte = memorySteam.ToArray();
+                    //}
+                    if (_user.userPhoto != null)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await _user.userPhoto.CopyToAsync(memoryStream);
+                            imgByte = memoryStream.ToArray();
+                        }
+                    }
+                    else
+                    {
+                        string defaultImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "s512_halloween201901_30_0.png");
+                        imgByte = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+                    }
+
+
+                    member.FileData = imgByte;
+
+                    _context.Members.Add(member);
+                    _context.SaveChanges();
+
+
+                    //return Content(strPath);
+                    return Content("Saved");
+                }
+                catch (Exception ex)
+                {
+                    return Content($"Error: {ex.Message}");
+                }
             }
 
-            //寫進資料庫
-            Member member = new Member();
-            member.Name = _user.userName;
-            member.Email = _user.userEmail;
-            member.Age = _user.userAge;
-            member.FileName = _user.userPhoto.FileName;
-            //將上船的檔案轉成二進位
-            byte[] imgByte = null;
-            using (var memorySteam = new MemoryStream())
-            {
-                _user.userPhoto.CopyTo(memorySteam);
-                imgByte = memorySteam.ToArray();
-            }
-            member.FileData = imgByte;
-            _context.Members.Add(member);
-            _context.SaveChanges();
 
 
-            return Content(strPath);
+
         }
 
         public async Task<IActionResult> CheckAccount(string inputName)

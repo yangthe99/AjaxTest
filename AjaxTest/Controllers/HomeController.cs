@@ -87,5 +87,9 @@ namespace AjaxTest.Controllers
         {
             return View();
         }
+        public IActionResult TravelSpots()
+        {
+            return View();
+        }
     }
 }
