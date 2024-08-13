@@ -42,6 +42,7 @@
             <div class="mb-3">
                 <label for="InputPassword" class="form-label">密碼</label>
                 <input type="password" class="form-control" id="InputPassword" name="userPassword">
+                <label for="InputPassword" id="Passwordneeded"></label>
             </div>
             <div class="mb-3">
                 <label for="InputPasswordConfirm" class="form-label">密碼確認</label>
@@ -51,6 +52,7 @@
             <div class="mb-3">
                 <label for="InputUserAge" class="form-label">年紀</label>
                 <input type="number" min="0" step="1" class="form-control" id="InputUserAge" name="userAge">
+                <label for="InputUserAge" id="Ageneeded"></label>
             </div>
             <div class="mb-3">
                 <label for="formFile" class="form-label">頭像(無上傳頭像會使用預設圖片)</label>
@@ -71,7 +73,6 @@
         const formData = new FormData(document.querySelector('#userForm'));
         const aFile = document.querySelector('#formFile');
         const theImg = document.querySelector('#img1');
-
 
 
         //檢查帳號
@@ -99,26 +100,60 @@
                 updateStatus(nameExist, InputUserName, '請輸入姓名', 'text-error', 'is-invalid');
             }
         });
-        //todo: 信箱, 年齡提醒
-        //檢查密碼
+        const updateStatus = (Reminder, inputTag, message, textClass, inputClass) => {
+            Reminder.textContent = message;
+            Reminder.className = `text ${textClass}`;
+            inputTag.className = `form-control ${inputClass}`;
+        };
+
+        //檢查空值
+        function handleBlur(inputElement, messageElement, message) {
+            const isEmpty = inputElement.value === '';
+            inputElement.classList.toggle('is-invalid', isEmpty);
+            messageElement.textContent = isEmpty ? message : '';
+            messageElement.classList.toggle('text-error', isEmpty);
+        }
+        
+        const InputUserEmail = document.querySelector('#InputUserEmail');
+        const Emailneeded = document.querySelector('#Emailneeded');
         const InputPasswordConfirm = document.querySelector('#InputPasswordConfirm');
         const InputPassword = document.querySelector('#InputPassword');
         const PasswordConfirm = document.querySelector('#PasswordConfirm');
-        InputPasswordConfirm.addEventListener('blur', async () => {
-            if (InputPasswordConfirm.value != InputPassword.value) {
-                InputPasswordConfirm.classList.add('is-invalid');
-                PasswordConfirm.textContent = '密碼不一致，請重新輸入';
-                PasswordConfirm.classList.add('text-error');
-                PasswordConfirm.classList.remove('text-success');
-            } else if (InputPasswordConfirm.value === '') {
-                PasswordConfirm.textContent = '';
-            } else {
-                InputPasswordConfirm.classList.remove('is-invalid');
-                PasswordConfirm.textContent = '密碼一致';
-                PasswordConfirm.classList.add('text-success');
-                PasswordConfirm.classList.remove('text-error');
-            }
-        });
+        const Passwordneeded = document.querySelector('#Passwordneeded');
+        const InputUserAge = document.querySelector('#InputUserAge');
+        const Ageneeded = document.querySelector('#Ageneeded');
+
+        InputUserEmail.addEventListener('blur', () => handleBlur(InputUserEmail, Emailneeded, '請輸入信箱'));
+        InputPassword.addEventListener('blur', () => handleBlur(InputPassword, Passwordneeded, '請輸入密碼'));
+        InputPasswordConfirm.addEventListener('blur', handlePasswordConfirmBlur);
+        InputUserAge.addEventListener('blur', () => handleBlur(InputUserAge, Ageneeded, '請輸入年齡'));
+
+
+
+        //檢查密碼是否一致
+       
+        // InputPasswordConfirm.addEventListener('blur', () => {
+        //     const isMatching = InputPasswordConfirm.value === InputPassword.value;
+        //     const isEmpty = InputPasswordConfirm.value === '';
+
+        //     InputPasswordConfirm.classList.toggle('is-invalid', !isMatching && !isEmpty);
+        //     PasswordConfirm.textContent = isEmpty ? '' : (isMatching ? '密碼一致' : '密碼不一致，請重新輸入');
+        //     PasswordConfirm.classList.toggle('text-success', isMatching && !isEmpty);
+        //     PasswordConfirm.classList.toggle('text-error', !isMatching && !isEmpty);
+        // });
+        function handlePasswordConfirmBlur() {
+            const isEmpty = InputPasswordConfirm.value === '';
+            const isMatching = !isEmpty && InputPasswordConfirm.value === InputPassword.value;
+
+            InputPasswordConfirm.classList.toggle('is-invalid', !isMatching || isEmpty);
+
+            PasswordConfirm.textContent = isEmpty
+                ? '請先輸入密碼，並再次填入相同密碼'
+                : (isMatching ? '密碼一致' : '密碼不一致，請重新輸入');
+
+            PasswordConfirm.classList.toggle('text-success', isMatching && !isEmpty);
+            PasswordConfirm.classList.toggle('text-error', !isMatching || isEmpty);
+        }
 
         //沒有頭貼
         document.addEventListener('DOMContentLoaded', () => {
@@ -173,10 +208,6 @@
 
 
 
-        const updateStatus = (Reminder, inputTag, message, textClass, inputClass) => {
-            Reminder.textContent = message;
-            Reminder.className = `text ${textClass}`;
-            inputTag.className = `form-control ${inputClass}`;
-        };
+
     </script>
 }
