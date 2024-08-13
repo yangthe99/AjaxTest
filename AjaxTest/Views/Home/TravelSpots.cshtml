@@ -2,10 +2,11 @@
     ViewData["Title"] = "TravelSpots";
 }
 
-<h1>作業4: 景點</h1>
+<h1>作業4: 景點
 
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+</h1>
 
 @section Styles {
     <style>
@@ -14,11 +15,23 @@
                     width: 100%;
                     object-fit: cover;
                 } */
-
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
     </style>
 }
 <div class="row mb-3">
-    <div class="col-3"></div>
+    <div class="col-2">
+        <div class="btn-group">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                每頁9筆資料
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
+                @* <li><a class="dropdown-item" href="#">每頁9筆資料</a></li> *@
+            </ul>
+        </div>
+    </div>
     <div class="col-6">
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-sm" id="ul1">
@@ -31,10 +44,29 @@
                 </li> *@
             </ul>
         </nav>
+        </div>
+    <div class="col-2">
+        <div class="btn-group">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                DESC
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
+                <li><a class="dropdown-item" href="#">DESC</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="col-3">
+
+    
+
+    <div class="col-2">
+
         <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
     </div>
+</div>
+<div class="btn-group" role="group" aria-label="Basic outlined example">
+    <button type="button" class="btn btn-outline-primary">Left</button>
+    <button type="button" class="btn btn-outline-primary">Middle</button>
+    <button type="button" class="btn btn-outline-primary">Right</button>
 </div>
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
@@ -109,6 +141,9 @@
             searchData.page = page;
             loadSpots()
         }
+
+
+
         loadSpots()
 
     </script>
