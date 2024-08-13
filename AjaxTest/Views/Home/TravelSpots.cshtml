@@ -2,7 +2,7 @@
     ViewData["Title"] = "TravelSpots";
 }
 
-<h1>作業4: 景點
+<h1 class="mb-3">作業4: 景點
 
 
     <a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
@@ -24,11 +24,14 @@
 <div class="row mb-3">
     <div class="col-2">
         <div class="btn-group">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="ChoosePage" data-bs-toggle="dropdown" aria-expanded="false">
                 每頁9筆資料
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
-                @* <li><a class="dropdown-item" href="#">每頁9筆資料</a></li> *@
+            <ul class="dropdown-menu" aria-labelledby="ChoosePage">
+                <li><a class="dropdown-item" data-value="9">每頁9筆資料</a></li>
+                <li><a class="dropdown-item" data-value="15">每頁15筆資料</a></li>
+                <li><a class="dropdown-item" data-value="21">每頁21筆資料</a></li>
+                <li><a class="dropdown-item" data-value="30">每頁30筆資料</a></li>
             </ul>
         </div>
     </div>
@@ -47,11 +50,12 @@
         </div>
     <div class="col-2">
         <div class="btn-group">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="ChooseSort" data-bs-toggle="dropdown" aria-expanded="false">
                 DESC
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
-                <li><a class="dropdown-item" href="#">DESC</a></li>
+            <ul class="dropdown-menu" aria-labelledby="ChooseSort">
+                <li><a class="dropdown-item" data-value="asc">ASC</a></li>
+                <li><a class="dropdown-item" data-value="desc">DESC</a></li>
             </ul>
         </div>
     </div>
@@ -63,10 +67,18 @@
         <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
     </div>
 </div>
-<div class="btn-group" role="group" aria-label="Basic outlined example">
-    <button type="button" class="btn btn-outline-primary">Left</button>
-    <button type="button" class="btn btn-outline-primary">Middle</button>
-    <button type="button" class="btn btn-outline-primary">Right</button>
+<div class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
+    <button type="button" class="btn btn-outline-primary">養生溫泉</button>
+    <button type="button" class="btn btn-outline-primary">藍色公路</button>
+    <button type="button" class="btn btn-outline-primary">歷史建築</button>
+    <button type="button" class="btn btn-outline-primary">藝文館所</button>
+    <button type="button" class="btn btn-outline-primary">單車遊蹤</button>
+    <button type="button" class="btn btn-outline-primary">戶外踏青</button>
+    <button type="button" class="btn btn-outline-primary">宗教信仰</button>
+    <button type="button" class="btn btn-outline-primary">其他</button>
+    <button type="button" class="btn btn-outline-primary">親子共遊</button>
+    <button type="button" class="btn btn-outline-primary">公共藝術</button>
+    <button type="button" class="btn btn-outline-primary">春季活動</button>
 </div>
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
@@ -134,15 +146,58 @@
                 liPages += `<li class="page-item" onclick="pagingHandler(${i})"> <a class="page-link"> ${i} </a></li >`
             }
             ulPages.innerHTML = liPages;
-        }
+
+            // //顯示筆數
+            // document.querySelectorAll('.dropdown-item').forEach(item => {
+            //     item.addEventListener('click', function (event) {
+            //         event.preventDefault();
+            //         const pageSize = this.getAttribute('data-value');
+            //         const displayText = this.textContent; // 獲取下拉式選單項目的文本內容
+            //         ChoosePage.textContent = displayText; // 更新 ChoosePage 的顯示文字
+            //         searchData.pageSize = parseInt(pageSize);
+            //         loadSpots();
+            //     });
+            // });
+
+
+
+            // 處理所有下拉選單按鈕
+            const dropdownButtons = document.querySelectorAll('.btn-group button.dropdown-toggle');
+
+            dropdownButtons.forEach(button => {
+                const dropdownMenu = button.nextElementSibling;
+
+                if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                    dropdownMenu.querySelectorAll('.dropdown-item').forEach(item => {
+                        item.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            button.textContent = this.textContent; // 更新按鈕文本
+
+                            // 檢查是否為每頁筆數選項
+                            if (button.id === 'ChoosePage') {
+                                const pageSize = this.getAttribute('data-value');
+                                searchData.pageSize = parseInt(pageSize); // 更新每頁顯示筆數
+                            }
+
+                            // 檢查是否為排序選項
+                            if (button.id === 'ChooseSort') {
+                                const sortOrder = this.getAttribute('data-value');
+                                searchData.sortType = sortOrder; // 更新排序依據
+                            }
+
+                            loadSpots(); // 加載數據
+                        });
+                    });
+                }
+            });
+
+        };
 
         //分頁
         const pagingHandler = page => {
             searchData.page = page;
             loadSpots()
         }
-
-
 
         loadSpots()
 
