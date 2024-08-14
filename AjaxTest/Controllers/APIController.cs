@@ -207,5 +207,13 @@ namespace AjaxTest.Controllers
             return Json(pagingDTO);
 
         }
+
+        public IActionResult SpotCategory()
+        {
+            var spots = _context.Categories
+                         .Select(x => new { x.CategoryId, x.CategoryName })
+                         .ToList();
+            return Json(spots);
+        }
     }
 }

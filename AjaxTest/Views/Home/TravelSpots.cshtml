@@ -67,8 +67,8 @@
         <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
     </div>
 </div>
-<div class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
-    <button type="button" class="btn btn-outline-primary">養生溫泉</button>
+<div id="spotCategori" class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
+@*     <button type="button" class="btn btn-outline-primary">養生溫泉</button>
     <button type="button" class="btn btn-outline-primary">藍色公路</button>
     <button type="button" class="btn btn-outline-primary">歷史建築</button>
     <button type="button" class="btn btn-outline-primary">藝文館所</button>
@@ -78,7 +78,7 @@
     <button type="button" class="btn btn-outline-primary">其他</button>
     <button type="button" class="btn btn-outline-primary">親子共遊</button>
     <button type="button" class="btn btn-outline-primary">公共藝術</button>
-    <button type="button" class="btn btn-outline-primary">春季活動</button>
+    <button type="button" class="btn btn-outline-primary">春季活動</button> *@
 </div>
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
@@ -116,7 +116,7 @@
             })
 
             const data = await response.json()
-            console.log(data)
+            // console.log(data)
 
             //JSON 資料讀取及顯示
             const spots = data.spotsResult.map(spot => {
@@ -139,6 +139,8 @@
             })
 
             divSpots.innerHTML = spots.join("")
+            
+
 
             //產生分頁按鈕
             let liPages = "";
@@ -192,6 +194,23 @@
             });
 
         };
+
+        //載入景點分類
+        (async () => {
+            const api = '/API/SpotCategory';
+            const response = await fetch(api);
+            const spotCategories = await response.json();
+            // console.log(spotCategories);
+            const elespotCategories = spotCategories.map(s => `<button type="button" class="btn btn-outline-primary" id="{${s.categoryId}">${s.categoryName}</button>`)
+        spotCategori.innerHTML = elespotCategories.join("")
+        })();
+
+        const spotCategori = document.querySelector('#spotCategori');
+        // const divInfo = document.querySelector('#div1')
+        // selCity.addEventListener('change', () => {
+        //     divInfo.textContent = selCity.value;
+        // })
+        
 
         //分頁
         const pagingHandler = page => {
