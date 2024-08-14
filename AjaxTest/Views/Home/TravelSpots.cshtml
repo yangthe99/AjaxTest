@@ -67,7 +67,7 @@
         <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
     </div>
 </div>
-<div id="spotCategori" class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
+<div id="spotCategory" class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
 @*     <button type="button" class="btn btn-outline-primary">養生溫泉</button>
     <button type="button" class="btn btn-outline-primary">藍色公路</button>
     <button type="button" class="btn btn-outline-primary">歷史建築</button>
@@ -86,8 +86,8 @@
     <script>
         const searchData = {
             "categoryId": 0,
-            "keyword": "北投",
-            "page": 2,
+            "keyword": "",
+            "page": 1,
             "pageSize": 9,
             "sortType": "desc",
             "sortBy": "categoryId"
@@ -200,17 +200,28 @@
             const api = '/API/SpotCategory';
             const response = await fetch(api);
             const spotCategories = await response.json();
-            // console.log(spotCategories);
-            const elespotCategories = spotCategories.map(s => `<button type="button" class="btn btn-outline-primary" id="{${s.categoryId}">${s.categoryName}</button>`)
-        spotCategori.innerHTML = elespotCategories.join("")
+            const buttonSize = '100px';
+            const elespotCategories = spotCategories.map(s => `
+                <button type="button" class="btn btn-outline-primary" id="${s.categoryId}" style="width: ${buttonSize}; height: ${buttonSize}; display: flex; align-items: center; justify-content: center;">
+                    ${s.categoryName}
+                </button>
+            `); spotCategory.innerHTML = elespotCategories.join("");
         })();
 
-        const spotCategori = document.querySelector('#spotCategori');
-        // const divInfo = document.querySelector('#div1')
-        // selCity.addEventListener('change', () => {
-        //     divInfo.textContent = selCity.value;
-        // })
-        
+        const spotCategory = document.querySelector('#spotCategory');
+
+        // 使用事件委託處理按鈕點擊
+        spotCategory.addEventListener('click', function (event) {
+            if (event.target.tagName === 'BUTTON') {
+                event.preventDefault();
+                const categoryId = event.target.getAttribute('id');
+                searchData.categoryId = parseInt(categoryId);
+                loadSpots();
+            }
+        });
+
+
+
 
         //分頁
         const pagingHandler = page => {
