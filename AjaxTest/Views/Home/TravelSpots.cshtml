@@ -19,6 +19,13 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
         }
+
+        .page-navigation {
+            display: flex;
+            justify-content: center; /* Center align the pagination items */
+            margin: 20px 0; /* Adjust margin as needed */
+        }
+
     </style>
 }
 <div class="row mb-3">
@@ -35,8 +42,8 @@
             </ul>
         </div>
     </div>
-    <div class="col-6">
-        <nav aria-label="Page navigation">
+    <div class="col-7">
+        <nav aria-label="Page navigation" class="page-navigation">
             <ul class="pagination pagination-sm" id="ul1">
                 @*                 <li class="page-item disabled" id="prevBtn">
                 <a class="page-link">Previous</a>
@@ -48,7 +55,7 @@
             </ul>
         </nav>
         </div>
-    <div class="col-2">
+    <div class="col-1">
         <div class="btn-group">
             <button class="btn btn-primary dropdown-toggle" type="button" id="ChooseSort" data-bs-toggle="dropdown" aria-expanded="false">
                 DESC
@@ -139,15 +146,68 @@
             })
 
             divSpots.innerHTML = spots.join("")
-            
+            updatePagination(data.totalPages, searchData.page);
 
 
-            //產生分頁按鈕
-            let liPages = "";
-            for (let i = 1, max = data.totalPages; i <= max; i++) {
-                liPages += `<li class="page-item" onclick="pagingHandler(${i})"> <a class="page-link"> ${i} </a></li >`
+
+            // 產生分頁按鈕
+            // let liPages = "";
+            // for (let i = 1, max = data.totalPages; i <= max; i++) {
+            //     liPages += `<li class="page-item" onclick="pagingHandler(${i})"> <a class="page-link"> ${i} </a></li >`
+            // }
+            // ulPages.innerHTML = liPages;
+
+            function updatePagination(totalPages, currentPage) {
+                const ulPages = document.getElementById('ul1');
+                let liPages = "";
+
+                // Helper function to create page item
+                function createPageItem(pageNumber, isActive) {
+                    return `<li class="page-item${isActive ? ' active' : ''}" onclick="pagingHandler(${pageNumber})">
+                           <a class="page-link">${pageNumber}</a>
+                       </li>`;
+                }
+
+                // Determine start and end page for pagination
+                const maxPagesToShow = 10;
+                let startPage = 1, endPage = totalPages;
+
+                if (totalPages > maxPagesToShow) {
+                    if (currentPage <= Math.floor(maxPagesToShow / 2)) {
+                        endPage = maxPagesToShow;
+                    } else if (currentPage + Math.floor(maxPagesToShow / 2) >= totalPages) {
+                        startPage = totalPages - maxPagesToShow + 1;
+                    } else {
+                        startPage = currentPage - Math.floor(maxPagesToShow / 2);
+                        endPage = currentPage + Math.floor(maxPagesToShow / 2);
+                    }
+                }
+
+                // Add 'First' and '...' if needed
+                if (startPage > 1) {
+                    liPages += createPageItem(1, currentPage === 1);
+                    if (startPage > 2) {
+                        liPages += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
+                }
+
+                // Add page numbers
+                for (let i = startPage; i <= endPage; i++) {
+                    liPages += createPageItem(i, i === currentPage);
+                }
+
+                // Add '...' and 'Last' if needed
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        liPages += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
+                    liPages += createPageItem(totalPages, currentPage === totalPages);
+                }
+
+                ulPages.innerHTML = liPages;
             }
-            ulPages.innerHTML = liPages;
+
+
 
             // //顯示筆數
             // document.querySelectorAll('.dropdown-item').forEach(item => {
@@ -211,11 +271,23 @@
         const spotCategory = document.querySelector('#spotCategory');
 
         // 使用事件委託處理按鈕點擊
+        // spotCategory.addEventListener('click', function (event) {
+        //     if (event.target.tagName === 'BUTTON') {
+        //         event.preventDefault();
+        //         const categoryId = event.target.getAttribute('id');
+        //         searchData.categoryId = parseInt(categoryId);
+        //         search.page = 1; console.log(searchData.page);
+        //         loadSpots();
+        //     }
+        // });
         spotCategory.addEventListener('click', function (event) {
             if (event.target.tagName === 'BUTTON') {
                 event.preventDefault();
                 const categoryId = event.target.getAttribute('id');
                 searchData.categoryId = parseInt(categoryId);
+                searchData.page = 1; // 确保页码跳回 1
+
+                // 重新加载景点数据
                 loadSpots();
             }
         });
