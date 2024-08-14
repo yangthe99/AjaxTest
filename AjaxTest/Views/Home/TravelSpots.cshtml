@@ -10,11 +10,6 @@
 
 @section Styles {
     <style>
-        /*         .card-img-top {
-                    max-height: 250px;
-                    width: 100%;
-                    object-fit: cover;
-                } */
         .btn-group {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -45,7 +40,7 @@
     <div class="col-7">
         <nav aria-label="Page navigation" class="page-navigation">
             <ul class="pagination pagination-sm" id="ul1">
-                @*                 <li class="page-item disabled" id="prevBtn">
+              @*<li class="page-item disabled" id="prevBtn">
                 <a class="page-link">Previous</a>
                 </li>
                 <!-- 分頁按鈕會插入到這裡 -->
@@ -75,17 +70,7 @@
     </div>
 </div>
 <div id="spotCategory" class="btn-group d-flex flex-wrap mb-3" role="group" aria-label="Basic outlined example">
-@*     <button type="button" class="btn btn-outline-primary">養生溫泉</button>
-    <button type="button" class="btn btn-outline-primary">藍色公路</button>
-    <button type="button" class="btn btn-outline-primary">歷史建築</button>
-    <button type="button" class="btn btn-outline-primary">藝文館所</button>
-    <button type="button" class="btn btn-outline-primary">單車遊蹤</button>
-    <button type="button" class="btn btn-outline-primary">戶外踏青</button>
-    <button type="button" class="btn btn-outline-primary">宗教信仰</button>
-    <button type="button" class="btn btn-outline-primary">其他</button>
-    <button type="button" class="btn btn-outline-primary">親子共遊</button>
-    <button type="button" class="btn btn-outline-primary">公共藝術</button>
-    <button type="button" class="btn btn-outline-primary">春季活動</button> *@
+    @* <!-- 這邊載入景點類別按鈕 --> *@
 </div>
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
@@ -161,14 +146,14 @@
                 const ulPages = document.getElementById('ul1');
                 let liPages = "";
 
-                // Helper function to create page item
+                // 創建頁碼項目
                 function createPageItem(pageNumber, isActive) {
                     return `<li class="page-item${isActive ? ' active' : ''}" onclick="pagingHandler(${pageNumber})">
                            <a class="page-link">${pageNumber}</a>
                        </li>`;
                 }
 
-                // Determine start and end page for pagination
+                // 分頁的開始頁和結束頁
                 const maxPagesToShow = 10;
                 let startPage = 1, endPage = totalPages;
 
@@ -183,7 +168,7 @@
                     }
                 }
 
-                // Add 'First' and '...' if needed
+                // 添加「首頁」和「...」(if needed)
                 if (startPage > 1) {
                     liPages += createPageItem(1, currentPage === 1);
                     if (startPage > 2) {
@@ -191,12 +176,12 @@
                     }
                 }
 
-                // Add page numbers
+                // 添加中間頁碼
                 for (let i = startPage; i <= endPage; i++) {
                     liPages += createPageItem(i, i === currentPage);
                 }
 
-                // Add '...' and 'Last' if needed
+                // 添加「...」和「最後一頁」(if needed)
                 if (endPage < totalPages) {
                     if (endPage < totalPages - 1) {
                         liPages += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
@@ -220,7 +205,6 @@
             //         loadSpots();
             //     });
             // });
-
 
 
             // 處理所有下拉選單按鈕
@@ -271,29 +255,16 @@
         const spotCategory = document.querySelector('#spotCategory');
 
         // 使用事件委託處理按鈕點擊
-        // spotCategory.addEventListener('click', function (event) {
-        //     if (event.target.tagName === 'BUTTON') {
-        //         event.preventDefault();
-        //         const categoryId = event.target.getAttribute('id');
-        //         searchData.categoryId = parseInt(categoryId);
-        //         search.page = 1; console.log(searchData.page);
-        //         loadSpots();
-        //     }
-        // });
         spotCategory.addEventListener('click', function (event) {
             if (event.target.tagName === 'BUTTON') {
                 event.preventDefault();
                 const categoryId = event.target.getAttribute('id');
                 searchData.categoryId = parseInt(categoryId);
-                searchData.page = 1; // 确保页码跳回 1
-
-                // 重新加载景点数据
+                searchData.page = 1;
                 loadSpots();
             }
         });
-
-
-
+       
 
         //分頁
         const pagingHandler = page => {
